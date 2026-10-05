@@ -1,4 +1,5 @@
-# tabular_ml_benchmark (DOI: https://doi.org/10.5281/zenodo.23149965)
+# tabular_ml_benchmark 
+DOI: https://doi.org/10.5281/zenodo.23149965
 
 I wanted to check whether tree models really beat neural networks on small tabular datasets, so I compared four models on eight datasets from OpenML. The models are logistic regression, random forest, histogram gradient boosting (from sklearn) and an MLP. Each model gets the same tuning budget inside nested cross validation, and I score them with ROC AUC.
 
