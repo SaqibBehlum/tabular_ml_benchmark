@@ -2,7 +2,7 @@
 
 **Saqib Ahmed** · October 2026 · *Unreviewed technical report (not peer reviewed)*
 Code and data: this repository (`benchmark.py`, `analyze.py`, `results/`, `figures/`)
-
+DOI: https://doi.org/10.5281/zenodo.23149965
 ## Abstract
 
 Tree based models are often reported to outperform neural networks on tabular data. We test this claim on eight small binary classification datasets from OpenML, comparing a tuned logistic regression baseline, random forest, histogram gradient boosting, and a multilayer perceptron (MLP). Every model gets the same random search budget inside nested cross-validation, and we report ROC-AUC, average ranks, and Friedman tests. We run three experiments: a baseline, a version with 20 added uninformative features, and a version capped at 300 rows. Random forest has the best average rank in the baseline (1.75), but the difference between models is not statistically significant (Friedman p = 0.092), and it is driven mostly by one dataset. The MLP is consistently ranked last and is hurt most by noisy features. With only 300 rows, logistic regression is the best model (average rank 1.62). A tuned linear baseline is therefore a strong competitor on small tabular data.
