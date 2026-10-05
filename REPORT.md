@@ -1,15 +1,15 @@
-# Tree Ensembles vs. Neural Networks on Small Tabular Data: A Nested-CV Benchmark with Noise and Sample-Size Experiments
+# Tree Ensembles vs. Neural Networks on Small Tabular Data: A Nested CV Benchmark with Noise and Sample Size Experiments
 
 **Saqib Ahmed** · October 2026 · *Unreviewed technical report (not peer-reviewed)*
 Code and data: this repository (`benchmark.py`, `analyze.py`, `results/`, `figures/`)
 
 ## Abstract
 
-Tree-based models are often reported to outperform neural networks on tabular data. We test this claim on eight small binary-classification datasets from OpenML, comparing a tuned logistic regression baseline, random forest, histogram gradient boosting and a multilayer perceptron (MLP). Every model gets the same random-search budget inside nested cross-validation, and we report ROC-AUC, average ranks and Friedman tests. We run three experiments: a baseline, a version with 20 added uninformative features, and a version capped at 300 rows. Random forest has the best average rank in the baseline (1.75), but the difference between models is not statistically significant (Friedman p = 0.092), and it is driven mostly by one dataset. The MLP is consistently ranked last and is hurt most by noise features. With only 300 rows, logistic regression is the best model (average rank 1.62). A tuned linear baseline is therefore a strong competitor on small tabular data.
+Tree based models are often reported to outperform neural networks on tabular data. We test this claim on eight small binary classification datasets from OpenML, comparing a tuned logistic regression baseline, random forest, histogram gradient boosting, and a multilayer perceptron (MLP). Every model gets the same random search budget inside nested cross-validation, and we report ROC-AUC, average ranks, and Friedman tests. We run three experiments: a baseline, a version with 20 added uninformative features, and a version capped at 300 rows. Random forest has the best average rank in the baseline (1.75), but the difference between models is not statistically significant (Friedman p = 0.092), and it is driven mostly by one dataset. The MLP is consistently ranked last and is hurt most by noisy features. With only 300 rows, logistic regression is the best model (average rank 1.62). A tuned linear baseline is therefore a strong competitor on small tabular data.
 
 ## 1. Introduction
 
-Gradient-boosted trees and random forests are the default choice for tabular data, and recent benchmarks report that they still beat deep learning on medium-sized tabular datasets [1]. Many practical problems, however, involve only hundreds or a few thousand rows. This report asks three questions on such small datasets:
+Gradient boosted trees and random forests are the default choice for tabular data, and recent benchmarks report that they still beat deep learning on medium sized tabular datasets [1]. Many practical problems, however, involve only hundreds or a few thousand rows. This report asks three questions on such small datasets:
 
 1. Do tree ensembles still outperform a neural network, and is a tuned linear baseline competitive?
 2. How does each model react to uninformative features?
@@ -17,33 +17,33 @@ Gradient-boosted trees and random forests are the default choice for tabular dat
 
 ## 2. Related work
 
-Grinsztajn et al. [1] show that tree-based models outperform deep learning on typical tabular data and identify robustness to uninformative features as one reason. Shwartz-Ziv and Armon [2] reach a similar conclusion about the strength of tree ensembles and the cost of tuning deep models. We follow the recommendation of Demšar [3] to compare classifiers across several datasets with rank-based tests, and we use random search for hyperparameter tuning [4]. Our contribution is a small, fully reproducible replication-style study that adds a tuned linear baseline and focuses on small datasets.
+Grinsztajn et al. [1] show that tree-based models outperform deep learning on typical tabular data and identify robustness to uninformative features as one reason. Shwartz-Ziv and Armon [2] reach a similar conclusion about the strength of tree ensembles and the cost of tuning deep models. We follow the recommendation of Demšar [3] to compare classifiers across several datasets with rank based tests, and we use random search for hyperparameter tuning [4]. Our contribution is a small, fully reproducible replication style study that adds a tuned linear baseline and focuses on small datasets.
 
 ## 3. Method
 
-**Datasets.** Eight binary classification datasets from OpenML (data ids in `benchmark.py`): credit-g (31), diabetes (37), blood-transfusion (1464), banknote (1462), phoneme (1489), ilpd (1480), wdbc (1510) and kc1 (1067).
+**Datasets.** Eight binary classification datasets from OpenML (data ids in `benchmark.py`): credit g (31), diabetes (37), blood transfusion (1464), banknote (1462), phoneme (1489), ilpd (1480), wdbc (1510), and kc1 (1067).
 | Dataset | Rows | Features |
 |---|---|---|
-| credit-g | 1000 | 20 |
+| credit g | 1000 | 20 |
 | diabetes | 768 | 8 |
-| blood-transfusion | 748 | 4 |
+| blood transfusion | 748 | 4 |
 | banknote | 1372 | 4 |
 | phoneme | 5404 | 5 |
 | ilpd | 583 | 10 |
 | wdbc | 569 | 30 |
 | kc1 | 2109 | 21 |
 
-Sizes range from 569 to 5,404 rows and from 4 to 30 features. In experiment C every dataset is capped at 300 rows, so all eight have the same size there.
+Sizes range from 569 to 5,404 rows and from 4 to 30 features. In experiment C, every dataset is capped at 300 rows, so all eight have the same size there.
 
-**Preprocessing.** Numeric features: median imputation and standardisation. Categorical features: most-frequent imputation and one-hot encoding. Preprocessing is fitted inside each training fold.
+**Preprocessing.** Numeric features: median imputation and standardisation. Categorical features: most frequent imputation and one-hot encoding. Preprocessing is fitted inside each training fold.
 
 **Models.** Logistic regression (L2, tuned C), random forest, histogram gradient boosting (scikit-learn) and an MLP (scikit-learn, early stopping). The search spaces are defined in `benchmark.py`.
 
-**Tuning and evaluation.** Nested cross-validation: 5 outer stratified folds repeated with 3 seeds (15 outer evaluations per dataset and model), and an inner 3-fold random search with 15 iterations per model, scored by ROC-AUC. All models receive the same number of search iterations. The reported value for a dataset and model is the mean ROC-AUC over the 15 outer evaluations.
+**Tuning and evaluation.** Nested cross-validation: 5 outer stratified folds repeated with 3 seeds (15 outer evaluations per dataset and model), and an inner 3-fold random search with 15 iterations per model, scored by ROC AUC. All models receive the same number of search iterations. The reported value for a dataset and model is the mean ROC AUC over the 15 outer evaluations.
 
 **Experiments.**
 - **A (baseline):** the datasets as they are.
-- **B (noise):** 20 extra standard-normal features appended to each dataset.
+- **B (noise):** 20 extra standard normal features appended to each dataset.
 - **C (small data):** each dataset randomly capped at 300 rows (fixed seed).
 
 **Statistics.** Models are ranked per dataset (rank 1 = best) and ranks are averaged. We use the Friedman test across the 8 datasets and pairwise two-sided Wilcoxon signed-rank tests across datasets. The folds of repeated cross-validation are not independent, so tests are run across datasets, not folds. Pairwise p-values are not corrected for multiple comparisons unless stated.
@@ -94,7 +94,7 @@ Change in mean AUC relative to the baseline, averaged over the 8 datasets:
 
 **Noise (B).** The Friedman test is significant (p = 0.0034). The MLP is the worst model (average rank 3.88) and loses the most AUC. RandomForest and HistGB are each significantly better than the MLP (Wilcoxon p = 0.0078 each, uncorrected; this is also the smallest p-value possible with 8 datasets and just below the Bonferroni threshold of 0.05/6 ≈ 0.0083). Logistic regression loses little (−0.011) and stays close to random forest in rank.
 
-**Small data (C).** Logistic regression has the best average rank (1.62) and wins 5 of 8 datasets, losing almost nothing compared with the full datasets (−0.004), while the other three models lose 0.022 to 0.027. The Friedman test is borderline (p = 0.058). Logistic regression is better than the MLP (p = 0.016, uncorrected), which does not remain significant after Bonferroni correction. Phoneme remains a tree-ensemble win.
+**Small data (C).** Logistic regression has the best average rank (1.62) and wins 5 of 8 datasets, losing almost nothing compared with the full datasets (−0.004), while the other three models lose 0.022 to 0.027. The Friedman test is borderline (p = 0.058). Logistic regression is better than the MLP (p = 0.016, uncorrected), which does not remain significant after Bonferroni correction. Phoneme remains a tree ensemble win.
 
 **Cost.** Mean time per outer fold including the random search, baseline experiment: logistic regression 0.9 s, HistGB 6.2 s, MLP 6.7 s, random forest 21.1 s. Equal search iterations therefore do not mean equal compute.
 
@@ -109,16 +109,16 @@ Practical takeaway: always include a tuned linear baseline, and use random fores
 
 ## 6. Limitations
 
-- Only 8 datasets, all binary classification, evaluated with ROC-AUC. With 8 datasets the Wilcoxon test has little power, and the smallest possible two-sided p-value is 0.0078.
+- Only 8 datasets, all binary classification, evaluated with ROC-AUC. With 8 datasets, the Wilcoxon test has little power, and the smallest possible two sided p-value is 0.0078.
 - Pairwise p-values are uncorrected, and several are near the 5% level; they should be read as indications, not proof.
 - A small search budget (15 iterations, 3 inner folds) and search spaces chosen by the author. Better tuning might change the ranking, especially for the MLP and HistGB.
-- The noise experiment uses one type (Gaussian) and one level (20 features). The small-data experiment uses a single fixed random subsample per dataset.
+- The noise experiment uses one type (Gaussian) and one level (20 features). The small data experiment uses a single fixed random subsample per dataset.
 - Equal iterations, not equal compute time.
-- Only scikit-learn implementations. XGBoost, LightGBM and modern deep tabular models (for example FT-Transformer) are not included.
+- Only scikit-learn implementations. XGBoost, LightGBM, and modern deep tabular models (for example, FT-Transformer) are not included.
 
 ## 7. Conclusion and future work
 
-On eight small binary datasets, random forest is slightly but not significantly better than a tuned logistic regression at baseline and under noise, logistic regression is best on very small samples, and the MLP is consistently last and most sensitive to uninformative features. Future work: more datasets from a standard suite, several noise levels and learning curves, time-matched tuning budgets, additional models (gradient boosting libraries and deep tabular architectures), and regression tasks.
+On eight small binary datasets, random forest is slightly but not significantly better than a tuned logistic regression at baseline and under noise; logistic regression is best on very small samples, and the MLP is consistently last and most sensitive to uninformative features. Future work: more datasets from a standard suite, several noise levels and learning curves, time-matched tuning budgets, additional models (gradient boosting libraries and deep tabular architectures), and regression tasks.
 
 ## Reproducibility
 
@@ -135,4 +135,4 @@ python analyze.py --results results --figures figures
 1. L. Grinsztajn, E. Oyallon, G. Varoquaux. *Why do tree-based models still outperform deep learning on typical tabular data?* NeurIPS 2022, Datasets and Benchmarks Track.
 2. R. Shwartz-Ziv, A. Armon. *Tabular data: Deep learning is not all you need.* Information Fusion, 81, 2022.
 3. J. Demšar. *Statistical comparisons of classifiers over multiple data sets.* Journal of Machine Learning Research, 7, 2006.
-4. J. Bergstra, Y. Bengio. *Random search for hyper-parameter optimization.* Journal of Machine Learning Research, 13, 2012.
+4. J. Bergstra, Y. Bengio. *Random search for hyperparameter optimization.* Journal of Machine Learning Research, 13, 2012.
