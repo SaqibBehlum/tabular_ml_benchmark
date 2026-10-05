@@ -1,6 +1,6 @@
 # Tree Ensembles vs. Neural Networks on Small Tabular Data: A Nested CV Benchmark with Noise and Sample Size Experiments
 
-**Saqib Ahmed** · October 2026 · *Unreviewed technical report (not peer-reviewed)*
+**Saqib Ahmed** · October 2026 · *Unreviewed technical report (not peer reviewed)*
 Code and data: this repository (`benchmark.py`, `analyze.py`, `results/`, `figures/`)
 
 ## Abstract
