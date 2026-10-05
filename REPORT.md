@@ -79,7 +79,7 @@ The random-forest advantage comes mostly from **phoneme**, where logistic regres
 | B: +20 noise features | 0.8309 (1.88) | **0.8458 (1.75)** | 0.8350 (2.50) | 0.8163 (3.88) | **0.0034** |
 | C: 300-row subsample | **0.8377 (1.62)** | 0.8364 (2.38) | 0.8284 (2.62) | 0.8197 (3.38) | 0.058 |
 
-![Average ranks](figures/average_ranks.png)
+![Average ranks](average_ranks.png)
 
 ### 4.3 Effect of noise features and small data
 
@@ -90,7 +90,7 @@ Change in mean AUC relative to the baseline, averaged over the 8 datasets:
 | B: +20 noise features | −0.011 | −0.012 | −0.017 | **−0.030** |
 | C: 300-row subsample | **−0.004** | −0.022 | −0.024 | −0.027 |
 
-![AUC change](figures/auc_change.png)
+![AUC change](auc_change.png)
 
 **Noise (B).** The Friedman test is significant (p = 0.0034). The MLP is the worst model (average rank 3.88) and loses the most AUC. RandomForest and HistGB are each significantly better than the MLP (Wilcoxon p = 0.0078 each, uncorrected; this is also the smallest p-value possible with 8 datasets and just below the Bonferroni threshold of 0.05/6 ≈ 0.0083). Logistic regression loses little (−0.011) and stays close to random forest in rank.
 
